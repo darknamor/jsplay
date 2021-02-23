@@ -1,0 +1,75 @@
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<meta name="keywords" content="" />
+	<meta name="description" content="" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet" type="text/css">
+	<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="css/templatemo_style.css" rel="stylesheet" type="text/css">	
+</head>
+<body>
+	<div class="templatemo-container">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-8 black-bg left-container">
+			<h1 class="logo-left hidden-xs margin-bottom-60">Peliculas</h1>			
+			<div class="tm-left-inner-container" id="titulos">
+				
+			</div>
+		</div> <!-- left section -->
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 white-bg right-container">
+			<h1 class="logo-right hidden-xs margin-bottom-60"><i class="fa fa-play" aria-hidden="true"></i></h1>		
+			<div class="tm-right-inner-container" id="movies">
+							
+			</div>	
+		</div> <!-- right section -->
+	</div>	
+</body>
+<script type="text/javascript">
+	var data;
+	function inicio(){        
+        url = "Controlador/gato";
+        $.ajax({
+            type: "POST",
+            async: false,
+            processData: false,
+            contentType: false,
+            url: "controlador.php",
+            success: function(result){
+                data = JSON.parse(result);
+                //data=data.sort()
+                console.log("data",data)
+            }
+       });
+    }
+    inicio();
+	var result = [];
+	for(var i in data){
+	    result.push(data [i]);
+	}
+	result.sort()
+	console.log("result",result);
+	console.log(result[0]);
+	var contenido =	'<ul class="nav nav-stacked templatemo-nav">';
+	var guarda = "";
+	var spliter;
+	for(var i=0;i<result.length;i++){
+		spliter = result[i].split(".");
+		guarda = guarda + '<li><a class="active" onclick="return changueMovie('+i+');" style="cursor: pointer;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;"><i class="fa fa-film fa-medium"></i>'+spliter[0]+'</a></li>';	
+	}
+	contenido = contenido+guarda+'</ul>';
+	function changueMovie(apunta){
+		spliter = result[apunta].split(".");
+		document.getElementById("movies").innerHTML =	'<h1 class="templatemo-header"><b>'+spliter[0]+'</b></h1>'+
+															'<div class="img-thumbnail">'+
+																'<video controls width=800 autoplay>'+
+													    			'<source src="'+result[apunta]+'">'+
+																'</video>'+
+															'</div>';
+	}
+    document.getElementById("titulos").innerHTML = contenido;
+</script>
